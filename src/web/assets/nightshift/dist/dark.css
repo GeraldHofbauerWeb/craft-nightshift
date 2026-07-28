@@ -1,48 +1,77 @@
 /**
  * Nightshift — a dark theme for the Craft CMS control panel.
  *
- * Applies only when <html data-theme="dark"> (set by toggle.js from the
- * persisted preference). Strategy: override Craft's design tokens for broad
- * coverage, plus explicit rules on the big structural surfaces so the main
- * screens look right even where a token name has drifted between Craft releases.
+ * Applies only when <html data-theme="dark"> (set by toggle.js from the persisted
+ * preference or the OS setting). Token-first: Craft 5 derives nearly every
+ * surface, border and text colour from an HSL neutral ramp (--gray-NNN-hsl) plus
+ * a few semantic tokens, so we flip the ramp once — that recolours the whole CP
+ * coherently — then remap the semantic tokens and set explicit backgrounds on the
+ * big surfaces (Craft injects some surface tokens at runtime, so we don't rely on
+ * them alone). Craft's brand/status ramps (red/teal/amber/sky) and --focus-ring
+ * are deliberately left untouched.
  */
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. Flip Craft's neutral ramp — the big lever.
+   Hue kept at ~211° for cohesion; lightness inverted (light 97%→dark 11% … light
+   10%→dark 95%); saturation eased for a calmer dark. Everything downstream
+   (surfaces 050–200, hairlines 300–400, text 550–1000) recolours from this.
+   ═══════════════════════════════════════════════════════════════════════════ */
 html[data-theme="dark"] {
-  /* ── palette ── */
-  --dk-bg:        #191b1f;   /* app background            */
-  --dk-surface:   #212429;   /* panes / cards / inputs    */
-  --dk-surface-2: #282c32;   /* raised (menus, header)    */
-  --dk-border:    #363b42;
-  --dk-text:      #e6e8ea;
-  --dk-text-mid:  #b6bbc2;
-  --dk-text-dim:  #8b9099;
+  --gray-050-hsl: 214, 14%, 11%;   /* darkest surface / app bg     */
+  --gray-100-hsl: 214, 13%, 14%;   /* panes, modals, header        */
+  --gray-150-hsl: 214, 12%, 17%;   /* raised surface / inputs      */
+  --gray-200-hsl: 214, 11%, 21%;   /* menus, selection             */
+  --gray-300-hsl: 213, 11%, 34%;   /* hairlines / dim UI           */
+  --gray-350-hsl: 213, 10%, 40%;
+  --gray-400-hsl: 212, 10%, 47%;
+  --gray-500-hsl: 213, 11%, 57%;   /* dim text                     */
+  --gray-550-hsl: 212, 12%, 61%;   /* subtle text (--fg-subtle)    */
+  --gray-600-hsl: 211, 13%, 67%;   /* medium text                  */
+  --gray-700-hsl: 211, 15%, 75%;
+  --gray-800-hsl: 211, 16%, 83%;   /* body text                    */
+  --gray-900-hsl: 212, 18%, 89%;   /* strong text                  */
+  --gray-1000-hsl: 212, 18%, 95%;  /* headings                     */
+
+  /* app-side palette aliases (resolve from the flipped ramp) */
+  --dk-bg:        hsl(212, 16%, 9%);
+  --dk-surface:   var(--gray-100);
+  --dk-surface-2: var(--gray-150);
+  --dk-raised:    var(--gray-200);
+  --dk-border:    var(--gray-300);
+  --dk-text:      var(--gray-900);
+  --dk-text-mid:  var(--gray-600);
+  --dk-text-dim:  var(--gray-500);
   --dk-link:      #7ab7ff;
 
-  /* ── Craft design tokens (best-effort broad coverage) ── */
-  --gray-050: #1e2126;
-  --gray-100: #24272c;
-  --gray-200: #2b2f35;
-  --gray-300: #363b42;
-  --gray-400: #454b53;
-  --gray-500: #6b7280;
-  --gray-600: #9aa0a8;
-  --gray-700: #c2c6cc;
-  --gray-800: #dde0e4;
-  --gray-900: #eef0f2;
+  /* semantic tokens Craft injects at runtime — remap best-effort (the explicit
+     surface rules below guarantee the big ones regardless). */
+  --body-bg:              var(--dk-bg);
+  --bg-color:             var(--dk-bg);
+  --modal-bg:             var(--dk-surface);
+  --pane-bg:              var(--dk-surface);
+  --secondary-pane-bg:    var(--gray-050);
+  --input-bg:             var(--dk-surface-2);
+  --text-color:           var(--dk-text);
+  --medium-text-color:    var(--dk-text-mid);
+  --light-text-color:     var(--dk-text-dim);
+  --link-color:           var(--dk-link);
+  --hairline-color:       var(--dk-border);
+  --border-hairline-medium: var(--dk-border);
+  --fg-input:             var(--gray-700);   /* input text/placeholder legible */
 
-  --text-color:              var(--dk-text);
-  --medium-dark-text-color:  var(--dk-text);
-  --medium-text-color:       var(--dk-text-mid);
-  --light-text-color:        var(--dk-text-dim);
-  --link-color:              var(--dk-link);
-  --hairline-color:          var(--dk-border);
-  --pane-bg-color:           var(--dk-surface);
-  --ui-control-bg-color:     var(--dk-surface);
-  --ui-control-hover-bg-color: var(--dk-surface-2);
+  /* elevation: no muddy dark-on-dark shadows — lean on borders + surface */
+  --pane-shadow: none;
+  --secondary-pane-shadow: none;
   color-scheme: dark;
 }
 
-/* ── structural fallbacks — the always-visible surfaces ── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. Guaranteed surfaces — set backgrounds directly, so they hold no matter how
+   Craft injects its runtime surface tokens.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* always-visible structural surfaces */
 html[data-theme="dark"],
 html[data-theme="dark"] body,
 html[data-theme="dark"] #global-container,
@@ -67,7 +96,7 @@ html[data-theme="dark"] #global-sidebar,
 html[data-theme="dark"] #global-sidebar .nav-toggle,
 html[data-theme="dark"] #global-sidebar #system-info,
 html[data-theme="dark"] #global-sidebar #nav {
-  background-color: #141619;
+  background-color: hsl(212, 16%, 7%);
   border-color: var(--dk-border);
   color: var(--dk-text);
 }
@@ -83,22 +112,42 @@ html[data-theme="dark"] #global-sidebar #nav a.sel {
   background-color: rgba(255, 255, 255, .07);
   color: var(--dk-text);
 }
-/* the system-info button (bottom) + its edition badge */
 html[data-theme="dark"] #global-sidebar #system-info:hover {
   background-color: rgba(255, 255, 255, .05);
 }
 
-/* panes / cards / detail meta */
+/* panes / cards / modals / slideouts / HUDs — the elevated content surfaces */
 html[data-theme="dark"] .pane,
-html[data-theme="dark"] .meta,
 html[data-theme="dark"] .card,
+html[data-theme="dark"] .meta,
 html[data-theme="dark"] .content-pane,
+html[data-theme="dark"] .details .meta,
+html[data-theme="dark"] .modal,
+html[data-theme="dark"] .slideout,
+html[data-theme="dark"] .hud,
+html[data-theme="dark"] .hud .body,
 html[data-theme="dark"] .so-content,
-html[data-theme="dark"] .details .meta {
+html[data-theme="dark"] .so-body,
+html[data-theme="dark"] .elementselectormodal {
   background-color: var(--dk-surface);
   border-color: var(--dk-border);
   color: var(--dk-text);
   box-shadow: none;
+}
+/* nested / secondary surfaces sit a step darker (as in the light theme) */
+html[data-theme="dark"] .slideout > .so-body > .so-sidebar,
+html[data-theme="dark"] .so-sidebar,
+html[data-theme="dark"] .hud-header,
+html[data-theme="dark"] .pane-header,
+html[data-theme="dark"] .slideout .pane,
+html[data-theme="dark"] .pane .pane {
+  background-color: var(--gray-050);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .modal-shade,
+html[data-theme="dark"] .slideout-shade {
+  background: rgba(0, 0, 0, .55);
 }
 
 /* inputs */
@@ -118,20 +167,46 @@ html[data-theme="dark"] select {
 }
 html[data-theme="dark"] ::placeholder { color: var(--dk-text-dim); }
 
-/* dropdown menus / HUDs / context menus */
+/* checkboxes / radios — the light fill was #fbfcfe */
+html[data-theme="dark"] .checkbox + label:before,
+html[data-theme="dark"] input[type="checkbox"] + label:before {
+  background-color: var(--dk-raised);
+  border-color: var(--dk-border);
+}
+
+/* dropdown menus / date+time pickers / context menus */
 html[data-theme="dark"] .menu,
 html[data-theme="dark"] .menu .padded,
-html[data-theme="dark"] .hud,
-html[data-theme="dark"] .hud .body,
-html[data-theme="dark"] .hud .tip-left,
-html[data-theme="dark"] .hud .tip-right {
+html[data-theme="dark"] .ui-datepicker,
+html[data-theme="dark"] .ui-timepicker-wrapper {
   background-color: var(--dk-surface-2);
   border-color: var(--dk-border);
   color: var(--dk-text);
 }
 html[data-theme="dark"] .menu a:not(.sel):hover,
 html[data-theme="dark"] .menu li a.active {
-  background-color: rgba(255,255,255,.06);
+  background-color: rgba(255, 255, 255, .06);
+  color: var(--dk-text);
+}
+
+/* tooltip — was hsla(0,0%,100%,.9) */
+html[data-theme="dark"] .tooltip {
+  background: var(--dk-surface-2);
+  color: var(--dk-text);
+  border: 1px solid var(--dk-border);
+}
+
+/* field-layout designer (lives inside the "Customize sources" slideout) —
+   .fld-library / .fld-new-tab-btn were hardcoded var(--white)/#fff */
+html[data-theme="dark"] .fld-library,
+html[data-theme="dark"] .fld-new-tab-btn {
+  background-color: var(--dk-surface) !important;
+  color: var(--dk-text);
+  border-color: var(--dk-border);
+}
+html[data-theme="dark"] .fld-element.fld-field,
+html[data-theme="dark"] .fld-hr .smalltext {
+  background-color: var(--dk-surface-2);
   color: var(--dk-text);
 }
 
@@ -143,14 +218,10 @@ html[data-theme="dark"] table.data td {
   border-color: var(--dk-border);
   color: var(--dk-text);
 }
-html[data-theme="dark"] table.data thead th {
-  background-color: var(--dk-surface-2);
-}
-html[data-theme="dark"] table.data tbody tr:hover td {
-  background-color: rgba(255,255,255,.04);
-}
+html[data-theme="dark"] table.data thead th { background-color: var(--gray-050); }
+html[data-theme="dark"] table.data tbody tr:hover td { background-color: rgba(255, 255, 255, .04); }
 
-/* tabs / toolbars / sidebars inside content */
+/* tabs / toolbars / content sidebars */
 html[data-theme="dark"] #tabs,
 html[data-theme="dark"] .toolbar,
 html[data-theme="dark"] .sidebar,
@@ -175,10 +246,29 @@ html[data-theme="dark"] .code { color: var(--dk-text-dim); }
 html[data-theme="dark"] a { color: var(--dk-link); }
 html[data-theme="dark"] hr { border-color: var(--dk-border); }
 
-/* ── the dark-mode toggle button ──
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. Elevation — tame the light-theme drop shadows.
+   Panes lean on their hairline (via --pane-shadow: none above); pop-overs keep
+   only a whisper so they still detach from the page.
+   ═══════════════════════════════════════════════════════════════════════════ */
+html[data-theme="dark"] .card:not(.chromeless, .hairline),
+html[data-theme="dark"] .chip:not(.chromeless, .hairline),
+html[data-theme="dark"] .matrixblock:not(.chromeless, .hairline) {
+  box-shadow: none;
+}
+html[data-theme="dark"] .menu,
+html[data-theme="dark"] .ui-datepicker,
+html[data-theme="dark"] .ui-timepicker-wrapper,
+html[data-theme="dark"] .tooltip {
+  box-shadow: 0 0 0 1px var(--dk-border), 0 6px 18px rgba(0, 0, 0, .38);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. The dark-mode toggle button.
    Position:fixed so it is OUT of the header's flex flow and can never wrap the
    bar onto a second line. toggle.js pins it vertically centred just left of the
-   account menu (with a static top-right fallback). */
+   account menu (with a static top-right fallback).
+   ═══════════════════════════════════════════════════════════════════════════ */
 #cp-theme-toggle {
   position: fixed;
   top: 10px;
@@ -198,11 +288,13 @@ html[data-theme="dark"] hr { border-color: var(--dk-border); }
   line-height: 1;
   font-size: 17px;
 }
-#cp-theme-toggle:hover { background: rgba(125,125,125,.18); }
+#cp-theme-toggle:hover { background: rgba(125, 125, 125, .18); }
 #cp-theme-toggle svg { width: 18px; height: 18px; fill: currentColor; }
 
-/* ── Plugin Store (a bundled Vue + Tailwind app; `tw-` classes exist only here,
-   so overriding them globally in the dark theme is safe) ── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. Plugin Store — a bundled Vue + Tailwind app (`tw-` classes exist only here,
+   and it is NOT part of Craft's token system), so it keeps explicit overrides.
+   ═══════════════════════════════════════════════════════════════════════════ */
 html[data-theme="dark"] .plugin-card,
 html[data-theme="dark"] .ps-grid-plugins .plugin-card {
   background-color: var(--dk-surface) !important;
@@ -213,7 +305,6 @@ html[data-theme="dark"] .tw-bg-gray-50,
 html[data-theme="dark"] .tw-bg-gray-100 {
   background-color: var(--dk-surface) !important;
 }
-/* dark Tailwind text utilities → readable on the dark background */
 html[data-theme="dark"] .tw-text-black,
 html[data-theme="dark"] .tw-text-gray-900,
 html[data-theme="dark"] .tw-text-gray-800,
@@ -227,7 +318,6 @@ html[data-theme="dark"] .tw-text-gray-500 { color: var(--dk-text-mid) !important
 html[data-theme="dark"] .tw-border-gray-200,
 html[data-theme="dark"] .tw-border-gray-300 { border-color: var(--dk-border) !important; }
 
-/* Plugin Store left category sidebar (its own .ps-sidebar / category-selector) */
 html[data-theme="dark"] .ps-sidebar,
 html[data-theme="dark"] .ps-sidebar * {
   color: var(--dk-text-mid) !important;

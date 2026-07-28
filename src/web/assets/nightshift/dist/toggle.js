@@ -1,22 +1,41 @@
 /**
  * Nightshift — CP dark-mode toggle.
  *
- * Injects a round sun/moon button into the CP global header, right next to the
- * user account menu. Persists the choice in localStorage ('cp-theme'); the actual
- * <html data-theme> attribute is set as early as possible by a tiny inline head
- * script (registered by the plugin) to avoid a flash of the light theme.
+ * Injects a round sun/moon button into the CP global header, next to the account
+ * menu. Theme resolution:
+ *   • an explicit choice in localStorage('cp-theme') always wins;
+ *   • with no explicit choice, the CP follows the OS `prefers-color-scheme` and
+ *     reacts to it live.
+ * Clicking the button sets an explicit per-browser override. The <html data-theme>
+ * attribute is set as early as possible by a tiny inline head script (registered
+ * by the plugin) to avoid a flash of the wrong theme.
  */
 (function () {
   var KEY = 'cp-theme';
   var root = document.documentElement;
+  var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
+  function stored() {
+    try {
+      var v = localStorage.getItem(KEY);
+      return v === 'dark' || v === 'light' ? v : null;
+    } catch (e) { return null; }
+  }
+  function systemTheme() {
+    return mql && mql.matches ? 'dark' : 'light';
+  }
   function current() {
     return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   }
-  function apply(theme) {
+
+  // Apply a theme. persist=true records an explicit override; persist=false just
+  // reflects the system preference without locking it in.
+  function apply(theme, persist) {
     if (theme === 'dark') root.setAttribute('data-theme', 'dark');
     else root.removeAttribute('data-theme');
-    try { localStorage.setItem(KEY, theme); } catch (e) {}
+    if (persist) {
+      try { localStorage.setItem(KEY, theme); } catch (e) {}
+    }
     updateButton(theme);
   }
 
@@ -38,7 +57,8 @@
     b.type = 'button';
     b.id = 'cp-theme-toggle';
     b.addEventListener('click', function () {
-      apply(current() === 'dark' ? 'light' : 'dark');
+      // Toggling from the currently-shown theme records an explicit override.
+      apply(current() === 'dark' ? 'light' : 'dark', true);
     });
     return b;
   }
@@ -53,9 +73,9 @@
     );
   }
 
-  // The button is position:fixed (see dark.css) so it is OUT of the header's
-  // flex flow and can never wrap the bar. Pin it vertically centred, just to the
-  // LEFT of the account menu; fall back to the CSS top/right if it isn't found.
+  // The button is position:fixed (see dark.css) so it is OUT of the header's flex
+  // flow and can never wrap the bar. Pin it vertically centred, just to the LEFT
+  // of the account menu; fall back to the CSS top/right if it isn't found.
   function reposition() {
     if (!btn) return;
     var acct = accountEl();
@@ -91,6 +111,15 @@
       if (++tries > 20) clearInterval(iv);
     }, 150);
     window.addEventListener('resize', reposition);
+
+    // Follow the OS live while the user hasn't set an explicit override.
+    if (mql) {
+      var onSystemChange = function () {
+        if (stored() === null) apply(systemTheme(), false);
+      };
+      if (mql.addEventListener) mql.addEventListener('change', onSystemChange);
+      else if (mql.addListener) mql.addListener(onSystemChange); // older Safari
+    }
   }
 
   if (document.readyState === 'loading') {

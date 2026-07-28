@@ -57,9 +57,12 @@ class Plugin extends BasePlugin
     {
         $view = Craft::$app->getView();
 
-        // Apply the persisted theme before first paint (avoids a flash of light).
+        // Resolve the theme before first paint (avoids a flash of the wrong one):
+        // an explicit choice wins; otherwise follow the OS `prefers-color-scheme`.
         $view->registerJs(
-            "try{if(localStorage.getItem('cp-theme')==='dark')"
+            "try{var t=localStorage.getItem('cp-theme');"
+            . "if(t==='dark'||(t!=='light'&&window.matchMedia&&"
+            . "matchMedia('(prefers-color-scheme: dark)').matches))"
             . "document.documentElement.setAttribute('data-theme','dark');}catch(e){}",
             View::POS_HEAD
         );

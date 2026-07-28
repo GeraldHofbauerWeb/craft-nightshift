@@ -265,6 +265,27 @@ html[data-theme="dark"] .code { color: var(--dk-text-dim); }
 html[data-theme="dark"] a { color: var(--dk-link); }
 html[data-theme="dark"] hr { border-color: var(--dk-border); }
 
+/* status labels — Craft sets a dark colour-900 text on a 15%-tinted pill, which
+   is dark-on-dark here (e.g. "Live"). Use a light tint of the SAME hue so the
+   status colour still reads. */
+html[data-theme="dark"] .status-label .status-label-text {
+  color: color-mix(in srgb, var(--status-label-bg-color), white 60%) !important;
+}
+
+/* loading overlay — Craft's `.elements.busy:after` is a white 75% wash that
+   flashes bright over the dark table while a list loads. Dim instead. */
+html[data-theme="dark"] .elements.busy:after {
+  background: hsla(0, 0%, 0%, .4);
+}
+
+/* settings / sidebar action cards — replace the flat gray-200 hover fill with a
+   subtle translucent brighten (matches the rest of the dark hovers). */
+html[data-theme="dark"] .sidebar-action:focus-visible,
+html[data-theme="dark"] .sidebar-action:hover:not(:has(.btn:hover)) {
+  background-color: rgba(255, 255, 255, .06);
+  color: var(--dk-text);
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    3. Elevation — tame the light-theme drop shadows.
    Panes lean on their hairline (via --pane-shadow: none above); pop-overs keep

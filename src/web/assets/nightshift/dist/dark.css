@@ -1,0 +1,246 @@
+/**
+ * Nightshift — a dark theme for the Craft CMS control panel.
+ *
+ * Applies only when <html data-theme="dark"> (set by toggle.js from the
+ * persisted preference). Strategy: override Craft's design tokens for broad
+ * coverage, plus explicit rules on the big structural surfaces so the main
+ * screens look right even where a token name has drifted between Craft releases.
+ */
+
+html[data-theme="dark"] {
+  /* ── palette ── */
+  --dk-bg:        #191b1f;   /* app background            */
+  --dk-surface:   #212429;   /* panes / cards / inputs    */
+  --dk-surface-2: #282c32;   /* raised (menus, header)    */
+  --dk-border:    #363b42;
+  --dk-text:      #e6e8ea;
+  --dk-text-mid:  #b6bbc2;
+  --dk-text-dim:  #8b9099;
+  --dk-link:      #7ab7ff;
+
+  /* ── Craft design tokens (best-effort broad coverage) ── */
+  --gray-050: #1e2126;
+  --gray-100: #24272c;
+  --gray-200: #2b2f35;
+  --gray-300: #363b42;
+  --gray-400: #454b53;
+  --gray-500: #6b7280;
+  --gray-600: #9aa0a8;
+  --gray-700: #c2c6cc;
+  --gray-800: #dde0e4;
+  --gray-900: #eef0f2;
+
+  --text-color:              var(--dk-text);
+  --medium-dark-text-color:  var(--dk-text);
+  --medium-text-color:       var(--dk-text-mid);
+  --light-text-color:        var(--dk-text-dim);
+  --link-color:              var(--dk-link);
+  --hairline-color:          var(--dk-border);
+  --pane-bg-color:           var(--dk-surface);
+  --ui-control-bg-color:     var(--dk-surface);
+  --ui-control-hover-bg-color: var(--dk-surface-2);
+  color-scheme: dark;
+}
+
+/* ── structural fallbacks — the always-visible surfaces ── */
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] #global-container,
+html[data-theme="dark"] #page-container,
+html[data-theme="dark"] #content-container,
+html[data-theme="dark"] #main-content,
+html[data-theme="dark"] #content {
+  background-color: var(--dk-bg);
+  color: var(--dk-text);
+}
+
+/* top header bar */
+html[data-theme="dark"] #global-header,
+html[data-theme="dark"] #header {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+
+/* left global navigation sidebar (a touch darker than the app bg for depth) */
+html[data-theme="dark"] #global-sidebar,
+html[data-theme="dark"] #global-sidebar .nav-toggle,
+html[data-theme="dark"] #global-sidebar #system-info,
+html[data-theme="dark"] #global-sidebar #nav {
+  background-color: #141619;
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] #global-sidebar #system-name h2,
+html[data-theme="dark"] #global-sidebar #system-info .label,
+html[data-theme="dark"] #global-sidebar a,
+html[data-theme="dark"] #global-sidebar .label {
+  color: var(--dk-text-mid);
+}
+html[data-theme="dark"] #global-sidebar #nav a:hover,
+html[data-theme="dark"] #global-sidebar #nav li.sel a,
+html[data-theme="dark"] #global-sidebar #nav a.sel {
+  background-color: rgba(255, 255, 255, .07);
+  color: var(--dk-text);
+}
+/* the system-info button (bottom) + its edition badge */
+html[data-theme="dark"] #global-sidebar #system-info:hover {
+  background-color: rgba(255, 255, 255, .05);
+}
+
+/* panes / cards / detail meta */
+html[data-theme="dark"] .pane,
+html[data-theme="dark"] .meta,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .content-pane,
+html[data-theme="dark"] .so-content,
+html[data-theme="dark"] .details .meta {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+  box-shadow: none;
+}
+
+/* inputs */
+html[data-theme="dark"] .text,
+html[data-theme="dark"] input.text,
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="search"],
+html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .select select,
+html[data-theme="dark"] select {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] ::placeholder { color: var(--dk-text-dim); }
+
+/* dropdown menus / HUDs / context menus */
+html[data-theme="dark"] .menu,
+html[data-theme="dark"] .menu .padded,
+html[data-theme="dark"] .hud,
+html[data-theme="dark"] .hud .body,
+html[data-theme="dark"] .hud .tip-left,
+html[data-theme="dark"] .hud .tip-right {
+  background-color: var(--dk-surface-2);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .menu a:not(.sel):hover,
+html[data-theme="dark"] .menu li a.active {
+  background-color: rgba(255,255,255,.06);
+  color: var(--dk-text);
+}
+
+/* data tables */
+html[data-theme="dark"] table.data,
+html[data-theme="dark"] table.data th,
+html[data-theme="dark"] table.data td {
+  background-color: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] table.data thead th {
+  background-color: var(--dk-surface-2);
+}
+html[data-theme="dark"] table.data tbody tr:hover td {
+  background-color: rgba(255,255,255,.04);
+}
+
+/* tabs / toolbars / sidebars inside content */
+html[data-theme="dark"] #tabs,
+html[data-theme="dark"] .toolbar,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .pane-sidebar,
+html[data-theme="dark"] .element .label {
+  background-color: transparent;
+  color: var(--dk-text);
+  border-color: var(--dk-border);
+}
+
+/* secondary buttons (leave .submit / coloured CTAs alone) */
+html[data-theme="dark"] .btn:not(.submit):not(.secondary-submit) {
+  background-color: var(--dk-surface-2);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .btn:not(.submit):hover { background-color: var(--dk-border); }
+
+/* text helpers */
+html[data-theme="dark"] .light,
+html[data-theme="dark"] .smalltext,
+html[data-theme="dark"] .code { color: var(--dk-text-dim); }
+html[data-theme="dark"] a { color: var(--dk-link); }
+html[data-theme="dark"] hr { border-color: var(--dk-border); }
+
+/* ── the dark-mode toggle button ──
+   Position:fixed so it is OUT of the header's flex flow and can never wrap the
+   bar onto a second line. toggle.js pins it vertically centred just left of the
+   account menu (with a static top-right fallback). */
+#cp-theme-toggle {
+  position: fixed;
+  top: 10px;
+  right: 60px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  color: currentColor;
+  line-height: 1;
+  font-size: 17px;
+}
+#cp-theme-toggle:hover { background: rgba(125,125,125,.18); }
+#cp-theme-toggle svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* ── Plugin Store (a bundled Vue + Tailwind app; `tw-` classes exist only here,
+   so overriding them globally in the dark theme is safe) ── */
+html[data-theme="dark"] .plugin-card,
+html[data-theme="dark"] .ps-grid-plugins .plugin-card {
+  background-color: var(--dk-surface) !important;
+  border-color: var(--dk-border) !important;
+}
+html[data-theme="dark"] .tw-bg-white,
+html[data-theme="dark"] .tw-bg-gray-50,
+html[data-theme="dark"] .tw-bg-gray-100 {
+  background-color: var(--dk-surface) !important;
+}
+/* dark Tailwind text utilities → readable on the dark background */
+html[data-theme="dark"] .tw-text-black,
+html[data-theme="dark"] .tw-text-gray-900,
+html[data-theme="dark"] .tw-text-gray-800,
+html[data-theme="dark"] .tw-text-gray-700,
+html[data-theme="dark"] .tw-text-gray-600,
+html[data-theme="dark"] .plugin-name,
+html[data-theme="dark"] .plugin-card .price {
+  color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .tw-text-gray-500 { color: var(--dk-text-mid) !important; }
+html[data-theme="dark"] .tw-border-gray-200,
+html[data-theme="dark"] .tw-border-gray-300 { border-color: var(--dk-border) !important; }
+
+/* Plugin Store left category sidebar (its own .ps-sidebar / category-selector) */
+html[data-theme="dark"] .ps-sidebar,
+html[data-theme="dark"] .ps-sidebar * {
+  color: var(--dk-text-mid) !important;
+  border-color: var(--dk-border);
+}
+html[data-theme="dark"] .ps-sidebar a { color: var(--dk-link) !important; }
+html[data-theme="dark"] .ps-sidebar *:hover,
+html[data-theme="dark"] .ps-sidebar [class*="sel"],
+html[data-theme="dark"] .ps-sidebar [class*="active"],
+html[data-theme="dark"] .ps-sidebar .category-selector-btn:hover {
+  color: var(--dk-text) !important;
+}
+html[data-theme="dark"] .ps-sidebar [class*="sel"],
+html[data-theme="dark"] .ps-sidebar .category-selector-btn.sel {
+  background-color: rgba(255, 255, 255, .07) !important;
+}

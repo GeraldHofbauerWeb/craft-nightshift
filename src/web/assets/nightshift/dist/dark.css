@@ -196,10 +196,15 @@ html[data-theme="dark"] .menu li a.active {
    read as disabled. Override at higher specificity. */
 html[data-theme="dark"] .menu ul li .menu-item,
 html[data-theme="dark"] .menu ul li .menu-option,
-html[data-theme="dark"] .menu ul li a,
+html[data-theme="dark"] .menu ul li a {
+  color: var(--dk-text);
+}
+/* disclosure-menu hover — Craft hardcodes a light bg (#f3f7fc) + dark text, which
+   reads as an unreadable light box on dark. Give it a dark hover surface instead. */
 html[data-theme="dark"] .menu--disclosure ul li > .menu-item:hover,
 html[data-theme="dark"] .menu--disclosure ul li > .menu-option:hover,
-html[data-theme="dark"] .menu--disclosure ul li > a:hover {
+html[data-theme="dark"] .menu--disclosure ul li > a:not(.crumb-link):hover {
+  background-color: var(--dk-raised);
   color: var(--dk-text);
 }
 

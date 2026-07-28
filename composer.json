@@ -22,9 +22,9 @@
     ],
     "support": {
         "email": "info@geraldhofbauer.net",
-        "source": "https://bitbucket.org/Gerry3010/craft-nightshift",
-        "issues": "https://bitbucket.org/Gerry3010/craft-nightshift/issues",
-        "docs": "https://bitbucket.org/Gerry3010/craft-nightshift/src/main/README.md"
+        "source": "https://github.com/Gerry3010/craft-nightshift",
+        "issues": "https://github.com/Gerry3010/craft-nightshift/issues",
+        "docs": "https://github.com/Gerry3010/craft-nightshift/blob/main/README.md"
     },
     "require": {
         "php": ">=8.2",
@@ -42,9 +42,11 @@
     "extra": {
         "handle": "nightshift",
         "name": "Nightshift",
+        "description": "A dark theme for the Craft CMS control panel, with a one-click header toggle.",
         "developer": "Gerald Hofbauer",
         "developerUrl": "https://geraldhofbauer.net",
-        "documentationUrl": "https://bitbucket.org/Gerry3010/craft-nightshift",
+        "developerEmail": "info@geraldhofbauer.net",
+        "documentationUrl": "https://github.com/Gerry3010/craft-nightshift",
         "class": "gerry3010\\nightshift\\Plugin"
     },
     "config": {

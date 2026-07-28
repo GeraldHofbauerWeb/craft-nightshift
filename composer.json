@@ -2,7 +2,7 @@
     "name": "gerry3010/craft-nightshift",
     "description": "Nightshift — a polished dark theme for the Craft CMS control panel, with a one-click sun/moon toggle in the header and a remembered preference (no flash of light on load).",
     "type": "craft-plugin",
-    "license": "proprietary",
+    "license": "MIT",
     "keywords": [
         "craft",
         "cms",

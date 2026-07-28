@@ -2,7 +2,7 @@
 /**
  * Nightshift CP theme asset bundle.
  *
- * @license Proprietary
+ * @license MIT
  */
 
 namespace gerry3010\nightshift\web\assets\nightshift;

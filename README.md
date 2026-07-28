@@ -58,7 +58,7 @@ your site is never affected.
 
 ## License
 
-Proprietary — see [LICENSE.md](LICENSE.md).
+MIT — see [LICENSE.md](LICENSE.md). Free and open source.
 
 ## Credits
 

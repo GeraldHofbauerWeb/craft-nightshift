@@ -7,7 +7,7 @@
  *
  * @author    Gerald Hofbauer
  * @copyright Copyright (c) 2026 Gerald Hofbauer
- * @license   Proprietary
+ * @license   MIT
  * @link      https://geraldhofbauer.net
  */
 

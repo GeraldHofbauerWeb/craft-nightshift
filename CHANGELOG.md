@@ -4,7 +4,7 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
-## 1.0.0 - Unreleased
+## 1.0.0 - 2026-07-29
 
 ### Added
 

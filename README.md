@@ -26,7 +26,7 @@ when you reload.
 From your project directory:
 
 ```bash
-composer require gerry3010/craft-nightshift
+composer require geraldhofbauerweb/craft-nightshift
 ./craft plugin/install nightshift
 ```
 

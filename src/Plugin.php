@@ -11,12 +11,12 @@
  * @link      https://geraldhofbauer.net
  */
 
-namespace gerry3010\nightshift;
+namespace geraldhofbauerweb\nightshift;
 
 use Craft;
 use craft\base\Plugin as BasePlugin;
 use craft\web\View;
-use gerry3010\nightshift\web\assets\nightshift\NightshiftAsset;
+use geraldhofbauerweb\nightshift\web\assets\nightshift\NightshiftAsset;
 
 /**
  * Nightshift.

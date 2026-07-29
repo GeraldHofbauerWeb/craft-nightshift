@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-namespace gerry3010\nightshift\web\assets\nightshift;
+namespace geraldhofbauerweb\nightshift\web\assets\nightshift;
 
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;

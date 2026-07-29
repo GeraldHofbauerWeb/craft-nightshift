@@ -1,5 +1,5 @@
 {
-    "name": "gerry3010/craft-nightshift",
+    "name": "geraldhofbauerweb/craft-nightshift",
     "description": "Nightshift — a polished dark theme for the Craft CMS control panel, with a one-click sun/moon toggle in the header and a remembered preference (no flash of light on load).",
     "type": "craft-plugin",
     "license": "MIT",
@@ -36,7 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "gerry3010\\nightshift\\": "src/"
+            "geraldhofbauerweb\\nightshift\\": "src/"
         }
     },
     "extra": {
@@ -47,7 +47,7 @@
         "developerUrl": "https://geraldhofbauer.net",
         "developerEmail": "info@geraldhofbauer.net",
         "documentationUrl": "https://github.com/GeraldHofbauerWeb/craft-nightshift",
-        "class": "gerry3010\\nightshift\\Plugin"
+        "class": "geraldhofbauerweb\\nightshift\\Plugin"
     },
     "config": {
         "allow-plugins": {

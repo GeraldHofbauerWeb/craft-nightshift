@@ -88,7 +88,7 @@ Optional polish (recommended, not blocking):
    (confirm the exact label shown in Console). Search in-Store keys off the listing
    name/description/category, so lead with "dark mode / dark theme" wording.
 8. **[GERALD]** (Optional but recommended) Register the package on **Packagist** pointed at
-   the GitHub URL, so `composer require gerry3010/craft-nightshift` resolves independently.
+   the GitHub URL, so `composer require geraldhofbauerweb/craft-nightshift` resolves independently.
 9. **[GERALD]** Click **Submit for approval** and accept the Store terms. Pixel & Tonic
    reviews it; after approval it appears on **plugins.craftcms.com** and (with the tagged
    release) inside the in-CP Plugin Store.

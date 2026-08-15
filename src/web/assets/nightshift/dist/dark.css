@@ -170,6 +170,23 @@ html[data-theme="dark"] select {
 }
 html[data-theme="dark"] ::placeholder { color: var(--dk-text-dim); }
 
+/* The open <select> popup is drawn by the browser, not by us. `color-scheme: dark`
+   already reaches the control through <html> — and is still not enough: the
+   <option>s keep a transparent background, so once the select itself carries an
+   author background colour Chrome paints the list from its light defaults, and the
+   highlighted row lands on a grey-on-grey that cannot be read. The options have to
+   be painted themselves. The scheme is repeated on the control so the scrollbar and
+   the check mark follow. */
+html[data-theme="dark"] .select select,
+html[data-theme="dark"] select {
+  color-scheme: dark;
+}
+html[data-theme="dark"] select option,
+html[data-theme="dark"] select optgroup {
+  background-color: var(--dk-surface-2);
+  color: var(--dk-text);
+}
+
 /* checkboxes / radios — the light fill was #fbfcfe */
 html[data-theme="dark"] .checkbox + label:before,
 html[data-theme="dark"] input[type="checkbox"] + label:before {
@@ -227,6 +244,16 @@ html[data-theme="dark"] .fld-element.fld-field,
 html[data-theme="dark"] .fld-hr .smalltext {
   background-color: var(--dk-surface-2);
   color: var(--dk-text);
+}
+
+/* entry/field tabs — the selected tab is `background-color: var(--white)`, and
+   Craft marks it !important, so the flipped ramp cannot reach it. It stayed a
+   bright slab above the dark pane. */
+html[data-theme="dark"] .pane-tabs [role="tablist"] [role="tab"].sel {
+  background-color: var(--dk-raised) !important;
+}
+html[data-theme="dark"] .pane-tabs [role="tablist"] [role="tab"]:not(.sel):hover {
+  background-color: var(--dk-surface-2);
 }
 
 /* data tables */
@@ -373,4 +400,66 @@ html[data-theme="dark"] .ps-sidebar .category-selector-btn:hover {
 html[data-theme="dark"] .ps-sidebar [class*="sel"],
 html[data-theme="dark"] .ps-sidebar .category-selector-btn.sel {
   background-color: rgba(255, 255, 255, .07) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. CKEditor — a bundled third-party UI with its own token layer.
+
+   CKEditor 5 derives its whole chrome from `--ck-color-*`, and Craft's field
+   plugin already points most of those at Craft tokens, which the flipped ramp
+   recolours for free. Two it pins to `var(--white)` with !important — the
+   toolbar and the dropdown panels — which left a bright strip across every
+   rich-text field. Craft declares them on `:root`, so `html[data-theme]` wins
+   on specificity and !important beats !important.
+
+   Token-first here too: no rules against `.ck-*` internals, which change
+   between CKEditor releases.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] {
+  /* editing surface + toolbar */
+  --ck-color-base-background:          var(--dk-surface-2) !important;
+  --ck-color-base-foreground:          var(--dk-surface) !important;
+  --ck-color-base-text:                var(--dk-text) !important;
+  --ck-color-text:                     var(--dk-text) !important;
+  --ck-color-toolbar-background:       var(--dk-surface) !important;
+  --ck-color-toolbar-border:           var(--dk-border) !important;
+
+  /* dropdown panels — the "Paragraph" menu, link balloon, insert-table grid */
+  --ck-color-panel-background:         var(--dk-raised) !important;
+  --ck-color-panel-border:             var(--dk-border) !important;
+  --ck-color-dropdown-panel-background: var(--dk-raised) !important;
+  --ck-color-dropdown-panel-border:    var(--dk-border) !important;
+  --ck-color-list-background:          var(--dk-raised) !important;
+  --ck-color-list-button-hover-background: var(--dk-surface-2) !important;
+  --ck-color-list-button-on-background:    var(--dk-surface-2) !important;
+  --ck-color-list-button-on-text:      var(--dk-text) !important;
+
+  /* fields inside balloons (link URL, image alt, table properties) */
+  --ck-color-input-background:         var(--dk-surface-2) !important;
+  --ck-color-input-border:             var(--dk-border) !important;
+  --ck-color-input-text:               var(--dk-text) !important;
+  --ck-color-input-disabled-background: var(--dk-surface) !important;
+  --ck-color-input-disabled-border:    var(--dk-border) !important;
+  --ck-color-input-disabled-text:      var(--dk-text-dim) !important;
+  --ck-color-labeled-field-label-background: var(--dk-surface-2) !important;
+
+  /* dialogs + tooltips */
+  --ck-color-dialog-background:        var(--dk-raised) !important;
+  --ck-color-dialog-form-header-border: var(--dk-border) !important;
+  --ck-color-tooltip-background:       var(--dk-raised) !important;
+  --ck-color-tooltip-text:             var(--dk-text) !important;
+
+  /* the light theme's drop shadows read as haze on a dark panel */
+  --ck-color-shadow-drop:              rgba(0, 0, 0, .5) !important;
+  --ck-color-shadow-drop-active:       rgba(0, 0, 0, .6) !important;
+  --ck-color-shadow-inner:             rgba(0, 0, 0, .3) !important;
+}
+
+/* Belt and braces: the source editing textarea and the editable itself are the
+   two surfaces a stray CKEditor default would show through most obviously. */
+html[data-theme="dark"] .ck.ck-editor__editable,
+html[data-theme="dark"] .ck-source-editing-area textarea {
+  background-color: var(--dk-surface-2);
+  color: var(--dk-text);
 }

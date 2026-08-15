@@ -4,6 +4,23 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
+## Unreleased
+
+### Fixed
+
+- **CKEditor toolbars stayed white.** Craft's field plugin pins
+  `--ck-color-toolbar-background` and `--ck-color-panel-background` to
+  `var(--white)` with `!important`, so the flipped ramp could not reach them and
+  every rich-text field wore a bright strip. Nightshift now remaps CKEditor's
+  `--ck-color-*` layer — toolbar, dropdown panels, balloon inputs, dialogs and
+  tooltips — from the same tokens as the rest of the CP.
+- **The selected entry/field tab stayed white.** Craft sets
+  `background-color: var(--white) !important` on `[role="tab"].sel`.
+- **The open `<select>` list was unreadable.** `color-scheme: dark` alone does not
+  do it: the `<option>`s carry no background of their own, so Chrome painted the
+  popup from its light defaults and the highlighted row came out grey on grey.
+  The options are now painted explicitly.
+
 ## 1.0.0 - 2026-07-29
 
 ### Added

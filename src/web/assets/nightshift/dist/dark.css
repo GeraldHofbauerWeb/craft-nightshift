@@ -58,6 +58,10 @@ html[data-theme="dark"] {
   --link-color:           var(--dk-link);
   --hairline-color:       var(--dk-border);
   --border-hairline-medium: var(--dk-border);
+  /* the surface Craft paints under a selected row or card, always with white
+     text on top. The flip sent it the wrong way — mid grey at 57% lightness
+     left that white text at ~3:1 — so it is set outright rather than derived. */
+  --bg-selection-dark:    hsl(212, 26%, 32%);
   --fg-input:             var(--gray-700);   /* input text/placeholder legible */
 
   /* elevation: no muddy dark-on-dark shadows — lean on borders + surface.
@@ -462,4 +466,155 @@ html[data-theme="dark"] .ck.ck-editor__editable,
 html[data-theme="dark"] .ck-source-editing-area textarea {
   background-color: var(--dk-surface-2);
   color: var(--dk-text);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. Selectize — the widget behind every Dropdown field.
+
+   Craft renders `_includes/forms/select` as a native <select>, then Selectize
+   hides it (`display: none`) and draws a DOM replica: `.selectize-input` for the
+   control, `.selectize-dropdown` for the list. Section 2's input rules therefore
+   land on an element nobody can see, and two palettes stack on the replica,
+   neither of them derived from a Craft token:
+
+     · Selectize's own — #fff, #303030, #e8e8e8, #d0d0d0
+     · Craft's restyle on top of it, which hardcodes #3f4d5a for every label and
+       paints `.selectize-dropdown-content` — the surface the list is actually
+       drawn on, not `.selectize-dropdown` — a flat #fff
+
+   So the ramp flip in section 1 reaches none of it: dark slate labels on white,
+   inside a control whose own background did follow the flip.
+
+   The worst of it was the query highlight. On opening, Selectize seeds the
+   search with the current label and marks every token that matches, so a value
+   like "Fotografie & Bild" highlighted the "&" in *every* option — a pale blue
+   wash picked for the light theme it was written against.
+
+   Specificity note: Craft's rules are shaped `body .selectize-dropdown …` and
+   `.selectize.select .selectize-input`, so the overrides below repeat that shape
+   instead of the shorter one. A bare `.selectize-input` loses.
+
+   Backgrounds on the control are deliberately left alone — Craft draws it from
+   --button-bg, which the flip already handles. Only the text was stranded.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* the control */
+html[data-theme="dark"] .selectize.select .selectize-input,
+html[data-theme="dark"] .selectize.multiselect .selectize-input,
+html[data-theme="dark"] .selectize-input,
+html[data-theme="dark"] .selectize-input input {
+  color: var(--dk-text);
+}
+/* …with one exception: while the list is open Selectize adds `.input-active`,
+   and that rule carries one class more than Craft's, so #fff wins and the
+   control turns white under the value for exactly as long as you are reading
+   the options. Repeat Craft's own background so open and closed match. */
+html[data-theme="dark"] .selectize-control.single .selectize-input.input-active {
+  background: var(--button-bg);
+}
+html[data-theme="dark"] .selectize-control .selectize-input.disabled {
+  background-color: var(--dk-surface);
+}
+/* the hairline Selectize draws where the open control meets the list */
+html[data-theme="dark"] .selectize-input.dropdown-active::before {
+  background: var(--dk-border);
+}
+html[data-theme="dark"] .selectize-control.single .selectize-input:not(.no-arrow)::after {
+  border-top-color: var(--dk-text-dim);
+}
+html[data-theme="dark"] .selectize-control.single .selectize-input:not(.no-arrow).dropdown-active::after {
+  border-bottom-color: var(--dk-text-dim);
+}
+
+/* the list — same surface and elevation as .menu in sections 2 and 3 */
+html[data-theme="dark"] .selectize-dropdown,
+html[data-theme="dark"] .selectize-dropdown-content {
+  background: var(--dk-surface-2);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .selectize-dropdown-content {
+  box-shadow: 0 0 0 1px var(--dk-border), 0 6px 18px rgba(0, 0, 0, .38);
+}
+html[data-theme="dark"] .selectize-dropdown .option,
+html[data-theme="dark"] .selectize-dropdown [data-selectable] {
+  color: var(--dk-text);
+}
+/* Craft restyles the group heading but leaves Selectize's own #fff background
+   in place — invisible in the light theme, a white bar in this one. */
+html[data-theme="dark"] .selectize-dropdown .optgroup-header {
+  background: transparent;
+  color: var(--dk-text-dim);
+}
+html[data-theme="dark"] .selectize-dropdown .active:not(.selected),
+html[data-theme="dark"] .selectize-dropdown .option:hover {
+  background-color: var(--dk-raised);
+}
+html[data-theme="dark"] .selectize-dropdown .create,
+html[data-theme="dark"] .selectize-dropdown .active.create {
+  color: var(--dk-text-dim);
+}
+html[data-theme="dark"] .selectize-dropdown [data-selectable] .highlight {
+  background: rgba(56, 189, 248, .3);
+  color: inherit;
+}
+html[data-theme="dark"] .selectize-dropdown .spinner::after {
+  border-color: var(--dk-border) transparent;
+}
+html[data-theme="dark"] .selectize-dropdown.plugin-optgroup_columns .optgroup {
+  border-right-color: var(--dk-border);
+}
+
+/* multi-select chips — Craft hardcodes #e4edf6 / #cdd8e4 / #3f4d5a here */
+html[data-theme="dark"] .selectize.multiselect .selectize-input > .item {
+  background-color: var(--dk-raised);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .selectize.multiselect .selectize-input > .item.active {
+  background-color: var(--gray-300);
+}
+html[data-theme="dark"] .selectize-control.multi .selectize-input > div {
+  background: var(--dk-raised);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] .selectize-control.multi .selectize-input.disabled > div,
+html[data-theme="dark"] .selectize-control.multi .selectize-input.disabled > div.active {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+  color: var(--dk-text-dim);
+}
+html[data-theme="dark"] .selectize-control.plugin-remove_button .item .remove,
+html[data-theme="dark"] .selectize-control.plugin-remove_button .item.active .remove,
+html[data-theme="dark"] .selectize-control.plugin-remove_button .disabled .item .remove {
+  border-left-color: var(--dk-border);
+}
+html[data-theme="dark"] .selectize-control.plugin-remove_button .item .remove:hover {
+  background: rgba(255, 255, 255, .08);
+}
+html[data-theme="dark"] .selectize-control.plugin-clear_button .clear {
+  color: var(--dk-text);
+}
+
+/* dropdown_header plugin */
+html[data-theme="dark"] .selectize-dropdown.plugin-dropdown_header .selectize-dropdown-header {
+  background: var(--dk-surface);
+  border-bottom-color: var(--dk-border);
+}
+html[data-theme="dark"] .selectize-dropdown.plugin-dropdown_header .selectize-dropdown-header-close,
+html[data-theme="dark"] .selectize-dropdown.plugin-dropdown_header .selectize-dropdown-header-close:hover {
+  color: var(--dk-text);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. Text selection.
+
+   The CP declares no ::selection outside of Prism's code blocks, so selected
+   text falls back to the browser's own highlight. Selectize makes that constant
+   rather than occasional: opening a Dropdown selects the whole label, so the
+   control carries a selection block on every single click.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] ::selection {
+  background-color: rgba(56, 189, 248, .35);
+  color: var(--gray-1000);
 }

@@ -4,6 +4,28 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
+## 1.0.2 - 2026-08-16
+
+### Fixed
+
+- **Dropdown fields were unreadable — the real cause.** 1.0.1 painted the native
+  `<option>` list, but a Craft Dropdown field never shows one: Selectize hides
+  the `<select>` and draws a DOM replica, so those rules landed on an element
+  nobody can see. Two hardcoded palettes stack on that replica — Selectize's own
+  (`#fff`, `#303030`, `#e8e8e8`) and Craft's restyle on top, which pins every
+  label to `#3f4d5a` and paints `.selectize-dropdown-content` a flat `#fff`.
+  None of it derives from a Craft token, so the ramp flip could not reach any of
+  it. The whole widget is now themed: control, list, group headings, hover and
+  selected rows, multi-select chips, and the query highlight that marked the
+  ampersand in every option of a label like "Fotografie & Bild".
+- **Text selection had no colour of its own.** The CP declares no `::selection`
+  outside Prism's code blocks. Selectize makes that constant rather than
+  occasional — opening a Dropdown selects the whole label — so the control
+  carried the browser's own highlight on every click.
+- **Selected rows and cards sat at ~3:1.** `--bg-selection-dark` is always paired
+  with white text by Craft; the flip sent it to a mid grey. It is now set
+  outright instead of derived.
+
 ## 1.0.1 - 2026-08-15
 
 ### Fixed

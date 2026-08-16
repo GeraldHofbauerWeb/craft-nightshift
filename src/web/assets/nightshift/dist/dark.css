@@ -629,3 +629,23 @@ html[data-theme="dark"] ::selection {
   background-color: rgba(56, 189, 248, .35);
   color: var(--gray-1000);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. Yii debug toolbar.
+
+   The toolbar is injected into normal CP pages, so unlike the debugger's own
+   pages (which the plugin skips outright) it cannot be excluded server-side.
+   It brings its own palette — a dark strip with white panels — and needs
+   nothing from us except to be left alone.
+
+   One thing did reach it: the inherited text colour. Its white ajax panel sets
+   no colour of its own, so it took ours and rendered light type on white.
+   Resetting the colour at the subtree root restores what the toolbar was
+   written against — the same #212529 its standalone pages use — while its own
+   rules keep styling the dark strip. Nothing here touches its internals, which
+   change between yii2-debug releases.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html[data-theme="dark"] #yii-debug-toolbar {
+  color: #212529;
+}

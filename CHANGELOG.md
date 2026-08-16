@@ -4,6 +4,23 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
+## 1.0.4 - 2026-08-16
+
+### Fixed
+
+- **The Yii debugger was left half-dark and unreadable.** Its pages are served
+  as control-panel requests, so they got the `<head>` script and the stylesheet
+  like any other page — but nothing in the theme reaches their markup. yii2-debug
+  ships its own palette, written for a light page, so the result was a dark
+  surface under dark type and log tables nobody could read. Nightshift now skips
+  `…/actions/debug/…` entirely and the debugger renders in its own design again.
+  This also spares the theme a second third-party UI to chase across releases.
+- **The debug toolbar's ajax panel was white on white.** The toolbar is injected
+  into normal CP pages, so it cannot be skipped server-side; its white panel sets
+  no colour of its own and inherited ours. The text colour is now reset at the
+  toolbar root to the same value its standalone pages use, without touching any
+  of its internals.
+
 ## 1.0.3 - 2026-08-16
 
 ### Fixed

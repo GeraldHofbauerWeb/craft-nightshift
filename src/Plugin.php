@@ -45,6 +45,22 @@ class Plugin extends BasePlugin
             return;
         }
 
+        // …but not the Yii debug module's own pages (…/actions/debug/…).
+        //
+        // They are served as CP requests, so without this they would get the
+        // <head> script and the stylesheet like any other page. Nothing in the
+        // theme reaches their markup, though: yii2-debug ships its own palette,
+        // built for a light page. The result was the worst of both — a dark
+        // surface underneath, dark type on top, and log tables nobody can read.
+        //
+        // Staying out gives the debugger back its own design, fully legible,
+        // and spares us a second third-party UI to chase across releases. The
+        // toolbar strip on normal CP pages is unaffected; it is part of the CP
+        // document, not a debug action, and brings its own dark styling.
+        if (($request->getActionSegments()[0] ?? null) === 'debug') {
+            return;
+        }
+
         // Defer until the app is fully initialized so the view + other CP asset
         // bundles are ready; our bundle depends on CpAsset so it loads last and
         // its overrides win specificity ties.

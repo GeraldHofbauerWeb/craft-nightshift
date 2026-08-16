@@ -4,6 +4,17 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
+## 1.0.3 - 2026-08-16
+
+### Fixed
+
+- **The selected item in the content sidebar was a bright slab.** Utilities,
+  Settings, entry sources and asset volumes paint their selected row from
+  `--gray-500` directly rather than from `--bg-selection-dark`, so the flip
+  handed them a light box carrying Craft's white text at ~2.9:1. Now on the same
+  selected surface as everything else, at 8.3:1. The same rule covers exclusive
+  button groups, which pick their pressed state from the same token.
+
 ## 1.0.2 - 2026-08-16
 
 ### Fixed

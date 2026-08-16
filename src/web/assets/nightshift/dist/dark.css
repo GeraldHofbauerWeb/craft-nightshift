@@ -123,6 +123,17 @@ html[data-theme="dark"] #global-sidebar #system-info:hover {
   background-color: rgba(255, 255, 255, .05);
 }
 
+/* Content sidebar (Utilities, Settings, entry sources, asset volumes) and
+   exclusive button groups. Both paint their selected item from --gray-500
+   directly instead of --bg-selection-dark, so the flip handed them a light slab
+   carrying Craft's white text at ~2.9:1 — a bright box in an otherwise dark UI.
+   Pointed at the same selected surface as everything else. */
+html[data-theme="dark"] .sidebar nav li:not(.has-subnav) [data-source-item].sel,
+html[data-theme="dark"] .sidebar nav li:not(.has-subnav) > a.sel,
+html[data-theme="dark"] .btngroup--exclusive .btn[aria-pressed="true"]:not(.disabled, .loading, .dashed, [aria-disabled]) {
+  background-color: var(--bg-selection-dark);
+}
+
 /* panes / cards / modals / slideouts / HUDs — the elevated content surfaces */
 html[data-theme="dark"] .pane,
 html[data-theme="dark"] .card,

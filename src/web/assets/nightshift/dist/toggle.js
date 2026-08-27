@@ -1,8 +1,8 @@
 /**
  * Nightshift — CP dark-mode toggle.
  *
- * Injects a round sun/moon button into the CP global header, next to the account
- * menu. Theme resolution:
+ * Injects a round sun/moon button into the CP global header, as a real child of
+ * it, immediately before the account menu. Theme resolution:
  *   • an explicit choice in localStorage('cp-theme') always wins;
  *   • with no explicit choice, the CP follows the OS `prefers-color-scheme` and
  *     reacts to it live.
@@ -63,54 +63,44 @@
     return b;
   }
 
-  // The account menu trigger, across Craft versions.
-  function accountEl() {
+  // The account menu's wrapper in the global header, across Craft versions.
+  function accountWrapperEl(header) {
     return (
-      document.querySelector('#user-info') ||
-      document.querySelector('#account-menu') ||
-      document.querySelector('#global-header #account') ||
-      document.querySelector('.header-nav .account')
+      header.querySelector('.account-toggle-wrapper') ||
+      header.querySelector('#user-info') ||
+      header.querySelector('#account')
     );
   }
 
-  // The button is position:fixed (see dark.css) so it is OUT of the header's flex
-  // flow and can never wrap the bar. Pin it vertically centred, just to the LEFT
-  // of the account menu; fall back to the CSS top/right if it isn't found.
-  function reposition() {
-    if (!btn) return;
-    var acct = accountEl();
-    if (acct) {
-      var r = acct.getBoundingClientRect();
-      if (r.width && r.height) {
-        btn.style.top = Math.round(r.top + r.height / 2 - 16) + 'px';
-        btn.style.right = Math.round(window.innerWidth - r.left + 6) + 'px';
-        return;
-      }
-    }
-    btn.style.top = '10px';
-    btn.style.right = '60px';
-  }
-
-  function mount() {
+  // Put the button inside #global-header, right before the account menu, so it
+  // rides along with the header. `settle` is the last attempt: only then, with no
+  // global header to be found, does it fall back to a fixed top-right corner
+  // button (see dark.css) rather than not appearing at all.
+  function mount(settle) {
     if (document.getElementById('cp-theme-toggle')) return true;
-    if (!document.body) return false;
+    var header = document.getElementById('global-header');
+    if (!header && !(settle && document.body)) return false;
     btn = makeButton();
-    document.body.appendChild(btn); // fixed-positioned; DOM location is irrelevant
+    if (header) {
+      var acct = accountWrapperEl(header);
+      if (acct && acct.parentNode === header) header.insertBefore(btn, acct);
+      else header.appendChild(btn);
+    } else {
+      btn.className = 'cp-theme-toggle--floating';
+      document.body.appendChild(btn);
+    }
     updateButton(current());
-    reposition();
     return true;
   }
 
   function boot() {
-    mount();
-    // The account menu can render a beat late — settle the position a few times.
-    var tries = 0;
-    var iv = setInterval(function () {
-      if (!btn) mount();
-      reposition();
-      if (++tries > 20) clearInterval(iv);
-    }, 150);
-    window.addEventListener('resize', reposition);
+    // The header can render a beat late — keep trying briefly before settling.
+    if (!mount(false)) {
+      var tries = 0;
+      var iv = setInterval(function () {
+        if (mount(++tries >= 20)) clearInterval(iv);
+      }, 150);
+    }
 
     // Follow the OS live while the user hasn't set an explicit override.
     if (mql) {

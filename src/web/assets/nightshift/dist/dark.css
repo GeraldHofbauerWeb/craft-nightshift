@@ -218,6 +218,16 @@ html[data-theme="dark"] .ui-timepicker-wrapper {
   border-color: var(--dk-border);
   color: var(--dk-text);
 }
+/* the datepicker's year picker — Craft paints `select.ui-datepicker-year` with a
+   literal `hsl(212deg 25% 90%)` pill (specificity 0,2,1, so the generic input rule
+   above cannot reach it). The year sat as light text on a light pill next to the
+   month name, i.e. invisible. */
+html[data-theme="dark"] .ui-datepicker .ui-datepicker-title select.ui-datepicker-year {
+  background-color: var(--dk-raised);
+  border-color: var(--dk-border);
+  color: var(--dk-text);
+}
+
 html[data-theme="dark"] .menu a:not(.sel):hover,
 html[data-theme="dark"] .menu li a.active {
   background-color: rgba(255, 255, 255, .06);
@@ -281,6 +291,21 @@ html[data-theme="dark"] table.data td {
 }
 html[data-theme="dark"] table.data thead th { background-color: var(--gray-050); }
 html[data-theme="dark"] table.data tbody tr:hover td { background-color: rgba(255, 255, 255, .04); }
+
+/* the sticky footer under element indexes ("1–14 of 14 entries" + Edit/Export).
+   Craft's #footer follows the ramp, but once it sticks to the viewport bottom
+   `#footer.stuck` swaps in a compiled light grey behind a backdrop blur — a value
+   baked at build time, so no token reaches it — and the bar is capped by a 2px
+   `var(--white)` border. It read as a frosted white slab across the bottom of
+   every listing. Same surface as the page, same translucency so the blur stays. */
+html[data-theme="dark"] #footer {
+  background-color: var(--gray-050);
+  border-block-start-color: var(--dk-border);
+  color: var(--dk-text);
+}
+html[data-theme="dark"] #footer.stuck {
+  background-color: hsla(214, 14%, 11%, .78);
+}
 
 /* tabs / toolbars / content sidebars */
 html[data-theme="dark"] #tabs,
@@ -347,20 +372,21 @@ html[data-theme="dark"] .tooltip {
 
 /* ═══════════════════════════════════════════════════════════════════════════
    4. The dark-mode toggle button.
-   Position:fixed so it is OUT of the header's flex flow and can never wrap the
-   bar onto a second line. toggle.js pins it vertically centred just left of the
-   account menu (with a static top-right fallback).
+   It sits IN the flow of #global-header, immediately left of the account menu,
+   so it scrolls with the header like every other item there. (It used to be
+   position:fixed at the account menu's coordinates — which only holds until you
+   scroll: Craft then pins #header to the top of the viewport under
+   `body.fixed-header`, and the fixed button ended up sitting on top of that
+   bar's primary button, e.g. "New entry".)
    ═══════════════════════════════════════════════════════════════════════════ */
 #cp-theme-toggle {
-  position: fixed;
-  top: 10px;
-  right: 60px;
-  z-index: 100;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: none;
   width: 32px;
   height: 32px;
+  margin-inline-end: 2px;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -372,6 +398,22 @@ html[data-theme="dark"] .tooltip {
 }
 #cp-theme-toggle:hover { background: rgba(125, 125, 125, .18); }
 #cp-theme-toggle svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* #global-header is a three-column grid (crumbs | announcements | account), so a
+   fourth child would drop onto a second row and make the bar two lines tall.
+   Widen it by one column while our button is in there. */
+#global-header:has(#cp-theme-toggle) {
+  grid-template-columns: 1fr min-content min-content min-content;
+}
+
+/* fallback for a CP without #global-header — float it top-right as before. */
+#cp-theme-toggle.cp-theme-toggle--floating {
+  position: fixed;
+  top: 10px;
+  right: 60px;
+  z-index: 100;
+  margin-inline-end: 0;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    5. Plugin Store — a bundled Vue + Tailwind app (`tw-` classes exist only here,

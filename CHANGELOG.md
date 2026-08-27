@@ -4,6 +4,29 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
+## 1.0.5 - 2026-08-27
+
+### Fixed
+
+- **The theme toggle sat on top of the "New entry" button.** The button was
+  `position: fixed` at the account menu's coordinates, which only holds until you
+  scroll: Craft then pins the page header to the top of the viewport
+  (`body.fixed-header`), and the toggle came to rest on that bar's primary
+  button. It is now a real child of `#global-header`, right before the account
+  menu, so it rides along with the header instead of floating over the page.
+  (The header is a three-column grid, so it gets a fourth column while the button
+  is in there — otherwise a fourth item would wrap the bar onto a second line.)
+- **The sticky footer under element indexes was a frosted white slab.** `#footer`
+  itself follows the ramp, but once it sticks to the bottom of the viewport
+  Craft's `.stuck` swaps in a light grey baked at build time — no token reaches
+  it — behind a backdrop blur, capped by a 2px `var(--white)` border. The bar
+  carrying "1–14 of 14 entries" and the index buttons now uses the page surface,
+  keeping the translucency so the blur still reads.
+- **The datepicker's year was invisible.** Craft paints
+  `select.ui-datepicker-year` with a literal light pill at a specificity the
+  generic input rule can't reach, so the year sat as light text on a light
+  background next to the month name.
+
 ## 1.0.4 - 2026-08-16
 
 ### Fixed

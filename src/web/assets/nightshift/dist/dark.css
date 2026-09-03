@@ -353,6 +353,37 @@ html[data-theme="dark"] .sidebar-action:hover:not(:has(.btn:hover)) {
   color: var(--dk-text);
 }
 
+/* draft notice — the "Showing your unsaved changes." bar above a provisional
+   draft. Craft paints its text, pencil icon and Discard button in --blue-800
+   (a dark blue meant for a white page) and rings the round icon with
+   `0 1px 1px 1px var(--white)`, which glows as a white crescent on the dark
+   bar. Lift the blues to the light end of the same ramp, drop the white ring. */
+html[data-theme="dark"] .draft-notice { color: var(--blue-300); }
+html[data-theme="dark"] .draft-notice .draft-icon:before { color: var(--blue-300) !important; }
+html[data-theme="dark"] .draft-notice .draft-icon {
+  border-color: rgba(147, 197, 253, .3);
+  box-shadow: none;
+}
+html[data-theme="dark"] .draft-notice .discard-changes-btn {
+  border-color: var(--blue-400) !important;
+  color: var(--blue-300) !important;
+}
+html[data-theme="dark"] .draft-notice .discard-changes-btn:hover,
+html[data-theme="dark"] .draft-notice .discard-changes-btn:focus {
+  border-color: var(--blue-300) !important;
+  background-color: rgba(147, 197, 253, .12) !important;
+}
+/* its neutral sibling (".content-notice", e.g. the revision banner) carries the
+   same white ring, and both inset "gloss" shadows are dark-on-dark. */
+html[data-theme="dark"] .content-notice .content-notice-icon {
+  border-color: var(--dk-border);
+  box-shadow: none;
+}
+html[data-theme="dark"] .draft-notice .draft-icon:after,
+html[data-theme="dark"] .content-notice .content-notice-icon:after {
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .06);
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    3. Elevation — tame the light-theme drop shadows.
    Panes lean on their hairline (via --pane-shadow: none above); pop-overs keep

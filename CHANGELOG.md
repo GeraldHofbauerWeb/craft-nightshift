@@ -4,6 +4,19 @@ All notable changes to Nightshift are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
+## 1.0.6 - 2026-09-03
+
+### Fixed
+
+- **The "Showing your unsaved changes." bar was dark blue on dark, ringed in
+  white.** Craft paints that notice — its text, the pencil icon and the Discard
+  button — in `--blue-800`, a blue picked to sit on a white page, and it lifts
+  the round icon off that page with `box-shadow: 0 1px 1px 1px var(--white)`.
+  On the dark bar the white ring showed up as a bright crescent under the icon
+  while the message itself sank into the background. The notice now uses the
+  light end of the same blue ramp and carries no white ring. Its neutral
+  sibling, the `.content-notice` banner, had the identical ring and loses it too.
+
 ## 1.0.5 - 2026-08-27
 
 ### Fixed
